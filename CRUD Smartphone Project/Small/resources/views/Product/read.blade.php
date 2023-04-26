@@ -14,14 +14,14 @@
             <tbody>
                 @foreach ($products as $item)
                 <tr>
-                    <td>{{ $item->name }}</td>
-                    <td><img src="{{ asset('storage/'.$item->image) }}" alt="" width="60px"></td>
-                    <td>{{ $item->color }}</td>
-                    <td>{{ $item->storage }}</td>
-                    <td>{{ $item->cate_name }}</td>
+                    <td>{{ $item->productName }}</td>
+                    <td><img src="{{ asset('storage/'.$item->productImage) }}" alt="" width="60px"></td>
+                    <td>{{ $item->productColor }}</td>
+                    <td>{{ $item->productStorage }}</td>
+                    <td>{{ $item->cateName }}</td>
                     <td>
-                        <form action="{{ route('product.destroy', $item->id) }}" method="POST">
-                            <a href="{{ route('product.edit', $item->id) }}"><button type="button" class="btn btn-warning">Update</button></a>
+                        <form action="{{ route('product.destroy', $item->idProduct) }}" method="POST">
+                            <a href="{{ route('product.edit', $item->idProduct) }}"><button type="button" class="btn btn-warning">Update</button></a>
                             @csrf
                             @method('DELETE')
                             <input type="submit" class="btn btn-danger" onclick="return confirm('Are you sure ?')" value="Delete">

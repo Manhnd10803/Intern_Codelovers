@@ -6,18 +6,18 @@
             @csrf
             @method('POST')
             <label for="">Name</label>
-            <input type="text" class="form-control" name="name">
-            @error('name')
+            <input type="text" class="form-control" name="productName">
+            @error('productName')
                 <p class="text-danger">{{ $message }}</p>
             @enderror
             <label for="">Color</label>
-            <select name="color" id="" class="form-select">
+            <select name="productColor" id="" class="form-select">
                 <option value="Black">Black</option>
                 <option value="White">White</option>
                 <option value="Gold">Gold</option>
             </select>
             <label for="">Storage</label>
-            <select name="storage" id="" class="form-select">
+            <select name="productStorage" id="" class="form-select">
                 <option value="64gb">64gb</option>
                 <option value="128gb">128gb</option>
                 <option value="256gb">256gb</option>
@@ -28,15 +28,15 @@
             <select name="cate_id" id="" class="form-select">
                 <option value="">--Select--</option>
                 @foreach ($cate as $item)
-                    <option value="{{ $item->id }}">{{ $item->name }}</option>
+                    <option value="{{ $item->idCate }}">{{ $item->cateName }}</option>
                 @endforeach
             </select>
             @error('cate_id')
                 <p class="text-danger">{{ $message }}</p>
             @enderror
             <label for="">Image</label>
-            <input type="file" class="form-control" name="image" accept="image/*">
-            @error('image')
+            <input type="file" class="form-control" name="productImage" accept="image/*">
+            @error('productImage')
                 <p class="text-danger">{{ $message }}</p>
             @enderror
             <input type="submit"class="btn btn-outline-primary" value="Add">

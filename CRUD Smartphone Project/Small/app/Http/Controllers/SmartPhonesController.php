@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+
 use App\Models\Category;
 use App\Models\Product;
+use Illuminate\Support\Facades\DB;
 class SmartPhonesController extends Controller
 {
     /**
@@ -13,13 +15,14 @@ class SmartPhonesController extends Controller
     public function index()
     {
         $pageTitle = "Home";
-        $products = Product::get();
+        // $products = Product::get();
         // Tự động thêm thuộc tính cate_name vào trong đối tượng sản phẩm dựa vào cate_id
-        foreach($products as $product){
-            $category = Category::find($product->cate_id);
-            $product->cate_name = $category->name;
-            // echo $product->cate_name;
-        }
+        // foreach($products as $product){
+        //     $category = Category::find($product->cate_id);
+        //     $product->cate_name = $category->name;
+        //     // echo $product->cate_name;
+        // }
+        $products = DB::table('products')->join('categories', 'products.cate_id', '=', 'categories.idCate')->get();
         // dd($products);
         return view('product.read', compact('pageTitle', 'products'));
     }
@@ -38,22 +41,22 @@ class SmartPhonesController extends Controller
      * Store a newly created resource in storage.
      */
     protected function storeImage(Request $request) {
-        $path = $request->file('image')->store('public/images');
+        $path = $request->file('productImage')->store('public/images');
         return substr($path, strlen('public/'));
     }
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'bail|required|unique:products|max:100',
+            'productName' => 'bail|required|unique:products|max:100',
             'cate_id' => 'required',
-            'image' => 'required'
+            'productImage' => 'required'
         ]);
         $imageUrl = $this->storeImage($request);
         Product::create([
-            'name' => $request['name'],
-            'color' => $request['color'],
-            'storage' => $request['storage'],
-            'image' => $imageUrl,
+            'productName' => $request['productName'],
+            'productColor' => $request['productColor'],
+            'productStorage' => $request['productStorage'],
+            'productImage' => $imageUrl,
             'cate_id' => $request['cate_id'],
         ]);
         return redirect('/');
@@ -70,11 +73,13 @@ class SmartPhonesController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(string $idProduct)
     {
         $cate = Category::get();
-        $product = Product::find($id);
+        // $product = Product::find( $productId, $idProduct);
+        $product = DB::table('products')->where('idProduct', '=', $idProduct)->first();
         $pageTitle = 'Edit Product';
+        // dd($product);
         return view('product.update', compact('product', 'pageTitle', 'cate'));
     }
 
@@ -84,19 +89,26 @@ class SmartPhonesController extends Controller
     public function update(Request $request, Product $product)
     {
         $request->validate([
-            'name' => 'required|max:100',
+            'productName' => 'required|max:100',
             'cate_id' => 'required',
         ]);
         // TH không cập nhật ảnh, giữ nguyên ảnh cũ
-        (!$request->file('image')) ? $imageUrl = Product::find($product->id)->image : $imageUrl = $this->storeImage($request);
-        // echo $imageUrl;
-        $product->fill([
-            'name' => $request['name'],
-            'color' => $request['color'],
-            'storage' => $request['storage'],
-            'image' => $imageUrl,
-            'cate_id' => $request['cate_id'],
-        ])->save();
+        (!$request->file('productImage')) ? $imageUrl = DB::table('products')->where('idProduct', '=', $product->idProduct)->first()->productImage : $imageUrl = $this->storeImage($request);
+        // $product->fill([
+        //     'productName' => $request['productName'],
+        //     'productColor' => $request['productColor'],
+        //     'productStorage' => $request['productStorage'],
+        //     'productImage' => $imageUrl,
+        //     'cate_id' => $request['cate_id'],
+        // ])->save();
+        // $product->idProduct = $product->id;
+        $product->productName = $request->productName;
+        $product->productColor = $request->productColor;
+        $product->productStorage = $request->productStorage;
+        $product->productImage = $imageUrl;
+        $product->cate_id = $request->cate_id;
+        // dd($product);
+        $product->save();
         return redirect('/');
     }
 
