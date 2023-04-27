@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th4 25, 2023 lúc 03:04 AM
+-- Thời gian đã tạo: Th4 27, 2023 lúc 10:09 AM
 -- Phiên bản máy phục vụ: 10.4.27-MariaDB
 -- Phiên bản PHP: 8.1.12
 
@@ -28,8 +28,8 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `categories` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `name` varchar(255) NOT NULL,
+  `idCate` int(10) UNSIGNED NOT NULL,
+  `cateName` varchar(255) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -38,7 +38,7 @@ CREATE TABLE `categories` (
 -- Đang đổ dữ liệu cho bảng `categories`
 --
 
-INSERT INTO `categories` (`id`, `name`, `created_at`, `updated_at`) VALUES
+INSERT INTO `categories` (`idCate`, `cateName`, `created_at`, `updated_at`) VALUES
 (1, 'Samsung', '2023-04-21 03:34:29', '2023-04-21 03:34:29'),
 (3, 'Apple', '2023-04-21 03:35:02', '2023-04-21 03:35:02'),
 (4, 'Oppo', '2023-04-21 03:35:02', '2023-04-21 03:35:02');
@@ -81,7 +81,9 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (3, '2019_08_19_000000_create_failed_jobs_table', 1),
 (4, '2019_12_14_000001_create_personal_access_tokens_table', 1),
 (5, '2023_04_21_031304_create_categories_table', 1),
-(6, '2023_04_21_032400_create_products_table', 2);
+(6, '2023_04_21_032400_create_products_table', 2),
+(7, '2023_04_26_082331_rename_categories', 3),
+(8, '2023_04_26_083210_rename_products', 4);
 
 -- --------------------------------------------------------
 
@@ -121,11 +123,11 @@ CREATE TABLE `personal_access_tokens` (
 --
 
 CREATE TABLE `products` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `color` varchar(255) NOT NULL,
-  `storage` varchar(255) NOT NULL,
-  `image` varchar(255) NOT NULL,
+  `idProduct` int(10) UNSIGNED NOT NULL,
+  `productName` varchar(255) NOT NULL,
+  `productColor` varchar(255) NOT NULL,
+  `productStorage` varchar(255) NOT NULL,
+  `productImage` varchar(255) NOT NULL,
   `cate_id` int(10) UNSIGNED NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -135,10 +137,18 @@ CREATE TABLE `products` (
 -- Đang đổ dữ liệu cho bảng `products`
 --
 
-INSERT INTO `products` (`id`, `name`, `color`, `storage`, `image`, `cate_id`, `created_at`, `updated_at`) VALUES
+INSERT INTO `products` (`idProduct`, `productName`, `productColor`, `productStorage`, `productImage`, `cate_id`, `created_at`, `updated_at`) VALUES
 (1, 'Iphone XS Max', 'Black', '64gb', 'images/Q3S4k8DBXLLQwwzFbPsySsihZDAlGf7ROmkeGlnS.jpg', 3, '2023-04-20 21:37:20', '2023-04-21 01:52:27'),
 (2, 'Samsung A31', 'White', '128gb', 'images/t7zOrkwpM4WGthv8uH1uTbVP6GZcyMx3rPvRiQcu.jpg', 1, '2023-04-20 21:37:36', '2023-04-21 01:53:26'),
-(3, 'OPPO Reno8 Z 5G', 'Gold', '256gb', 'images/hdlklRaCNAt5OV7upMnt4551GOyyFIHkQfISvPnW.jpg', 4, '2023-04-20 21:37:47', '2023-04-21 01:54:23');
+(3, 'OPPO Reno8 Z 5G', 'Gold', '256gb', 'images/hdlklRaCNAt5OV7upMnt4551GOyyFIHkQfISvPnW.jpg', 4, '2023-04-20 21:37:47', '2023-04-21 01:54:23'),
+(18, 'Iphone XS Max 2', 'White', '256gb', 'images/4vUMCSFUCH7awoSaMXJh9mx4SQtCqDc9LRYTawxX.jpg', 3, '2023-04-26 18:32:38', '2023-04-26 18:32:38'),
+(19, 'Iphone XS Max 3', 'Gold', '512gb', 'images/NLVOb3QbPy6zRbEjstbeYK7JlWEbaUMqMLXUrw2F.jpg', 4, '2023-04-26 18:33:04', '2023-04-26 18:33:04'),
+(20, 'Iphone XS Max 4', 'Gold', '256gb', 'images/iH4Nquo0aF7wqC1Y1SSLufVXjz7dxUK4apphNpnh.jpg', 1, '2023-04-26 18:33:21', '2023-04-26 18:33:21'),
+(21, 'Iphone XS Max 5', 'White', '256gb', 'images/bqp5nZhQUAhki3hWGsH5wiMrVpygdGmhXAYMWA2V.jpg', 1, '2023-04-26 18:33:31', '2023-04-26 18:33:31'),
+(22, 'Iphone XS Max 6', 'White', '128gb', 'images/vHJcFsj1Y8au7jrwHsprXkP10Df8qMBOwa2KlAgQ.jpg', 1, '2023-04-26 18:33:40', '2023-04-26 18:33:40'),
+(23, 'Iphone XS Max 7', 'White', '128gb', 'images/z6E3d2i0JSj9D4EZa1xNndLVULsFHnnTxFWKPFO3.jpg', 1, '2023-04-26 18:33:50', '2023-04-26 18:33:50'),
+(24, 'Iphone XS Max 8', 'White', '128gb', 'images/EH3VYymYwCyvlT38fGzVdaxpvGkMUsSlChPXBbIo.jpg', 1, '2023-04-26 18:34:33', '2023-04-26 18:34:33'),
+(25, 'Iphone XS Max 9', 'Black', '256gb', 'images/7Hg1LhUdc9oHdv1XLsgaL0QEizbm71AR3iMTmWrM.jpg', 3, '2023-04-26 18:35:01', '2023-04-26 18:51:11');
 
 -- --------------------------------------------------------
 
@@ -165,7 +175,7 @@ CREATE TABLE `users` (
 -- Chỉ mục cho bảng `categories`
 --
 ALTER TABLE `categories`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`idCate`);
 
 --
 -- Chỉ mục cho bảng `failed_jobs`
@@ -198,7 +208,7 @@ ALTER TABLE `personal_access_tokens`
 -- Chỉ mục cho bảng `products`
 --
 ALTER TABLE `products`
-  ADD PRIMARY KEY (`id`),
+  ADD PRIMARY KEY (`idProduct`),
   ADD KEY `products_cate_id_foreign` (`cate_id`);
 
 --
@@ -216,7 +226,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT cho bảng `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `idCate` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT cho bảng `failed_jobs`
@@ -228,7 +238,7 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT cho bảng `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT cho bảng `personal_access_tokens`
@@ -240,7 +250,7 @@ ALTER TABLE `personal_access_tokens`
 -- AUTO_INCREMENT cho bảng `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `idProduct` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT cho bảng `users`
@@ -256,7 +266,7 @@ ALTER TABLE `users`
 -- Các ràng buộc cho bảng `products`
 --
 ALTER TABLE `products`
-  ADD CONSTRAINT `products_cate_id_foreign` FOREIGN KEY (`cate_id`) REFERENCES `categories` (`id`);
+  ADD CONSTRAINT `products_cate_id_foreign` FOREIGN KEY (`cate_id`) REFERENCES `categories` (`idCate`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
