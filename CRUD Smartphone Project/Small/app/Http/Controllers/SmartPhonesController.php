@@ -22,7 +22,7 @@ class SmartPhonesController extends Controller
         //     $product->cate_name = $category->name;
         //     // echo $product->cate_name;
         // }
-        $products = DB::table('products')->join('categories', 'products.cate_id', '=', 'categories.idCate')->get();
+        $products = DB::table('products')->join('categories', 'products.cate_id', '=', 'categories.idCate')->orderBy('idProduct')->paginate(6);
         // dd($products);
         return view('product.read', compact('pageTitle', 'products'));
     }

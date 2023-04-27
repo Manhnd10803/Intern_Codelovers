@@ -31,6 +31,10 @@
                 @endforeach
             </tbody>
         </table>
-        <a href="{{ route('product.create') }}"><button type="button" class="btn btn-primary">Add</button></a>
+        
+        <div style="display:flex; justify-content: space-between">
+            <a href="{{ route('product.create') }}"><button type="button" class="btn btn-primary">Add</button></a>
+            <div style="margin-right: 10%">{{ $products->links() }}</div>
+        </div>
     </div>
 @endsection
