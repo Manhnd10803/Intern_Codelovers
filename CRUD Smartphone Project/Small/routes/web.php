@@ -16,3 +16,4 @@ use App\Http\Controllers\SmartPhonesController;
 
 Route::get('/', [SmartPhonesController::class, 'index']);
 Route::resource('/product', SmartPhonesController::class);
+Route::get('/search/product', [SmartPhonesController::class, 'search']);
