@@ -127,21 +127,18 @@ class SmartPhonesController extends Controller
 
     public function search(Request $request){
         $pageTitle = "Serach";
-        if($request->keyword == null && $request->cate_id == null){
-            $products = DB::table('products')->join('categories', 'products.cate_id', '=', 'categories.idCate')->orderBy('idProduct')->paginate(6);
-            $cate = Category::get();
-        }
-        if($request->keyword != null && $request->cate_id == null){
-            $cate = Category::get();
-            $products = DB::table('products')->join('categories', 'products.cate_id', '=', 'categories.idCate')->where('productName', 'like', "%".$request->keyword."%")->paginate(6);
-        }
-        if($request->keyword == null && $request->cate_id != null){
-            $cate = Category::get();
-            $products = DB::table('products')->join('categories', 'products.cate_id', '=', 'categories.idCate')->where('cate_id', '=', $request->cate_id)->paginate(6);
-        }
         if($request->keyword != null && $request->cate_id != null){
             $cate = Category::get();
             $products = DB::table('products')->join('categories', 'products.cate_id', '=', 'categories.idCate')->where('cate_id', '=', $request->cate_id)->where('productName', 'like', "%".$request->keyword."%")->paginate(6);
+        }else if($request->keyword != null && $request->cate_id == null){
+            $cate = Category::get();
+            $products = DB::table('products')->join('categories', 'products.cate_id', '=', 'categories.idCate')->where('productName', 'like', "%".$request->keyword."%")->paginate(6);
+        }else if($request->keyword == null && $request->cate_id != null){
+            $cate = Category::get();
+            $products = DB::table('products')->join('categories', 'products.cate_id', '=', 'categories.idCate')->where('cate_id', '=', $request->cate_id)->paginate(6);
+        }else if($request->keyword == null && $request->cate_id == null){
+            $products = DB::table('products')->join('categories', 'products.cate_id', '=', 'categories.idCate')->orderBy('idProduct')->paginate(6);
+            $cate = Category::get();
         }
         return view('product.read', compact('pageTitle', 'products', 'cate'));
     }
