@@ -38,7 +38,10 @@
             <div class="">
                 <img src="{{ asset('storage/'.$product->productImage) }}" alt="" width="300px">
             </div>
-            <input type="file" class="form-control" name="productImage" accept="image/*">
+            <input type="file" class="form-control" name="productImage">
+            @error('productImage')
+                <p class="text-danger">{{ $message }}</p>
+            @enderror
             <input type="submit"class="btn btn-outline-warning" value="Update">
         </form>
     </div>

@@ -50,8 +50,14 @@ class SmartPhonesController extends Controller
         $request->validate([
             'productName' => 'bail|required|unique:products|max:100',
             'cate_id' => 'required',
-            'productImage' => 'required'
-        ]);
+            'productImage' => 'required|mimes:jpg,jpeg,png,gif|max:2048'
+        ],
+        // Quy định hiển thị thông báo lỗi
+        // [
+        //     'productImage.mimes' => 'Chỉ nhập ảnh',
+        //     'productImage.max' => 'Ảnh tối đa 2MB'
+        // ]
+    );
         $imageUrl = $this->storeImage($request);
         Product::create([
             'productName' => $request['productName'],
@@ -92,21 +98,18 @@ class SmartPhonesController extends Controller
         $request->validate([
             'productName' => 'required|max:100',
             'cate_id' => 'required',
+            'productImage' => 'mimes:jpg,jpeg,png,gif|max:2048'
         ]);
-        // TH không cập nhật ảnh, giữ nguyên ảnh cũ
-        (!$request->file('productImage')) ? $imageUrl = DB::table('products')->where('idProduct', '=', $product->idProduct)->first()->productImage : $imageUrl = $this->storeImage($request);
-        // $product->fill([
-        //     'productName' => $request['productName'],
-        //     'productColor' => $request['productColor'],
-        //     'productStorage' => $request['productStorage'],
-        //     'productImage' => $imageUrl,
-        //     'cate_id' => $request['cate_id'],
-        // ])->save();
-        // $product->idProduct = $product->id;
+        // Có upload ảnh mới thì mới update đường dẫn ảnh
+        if($request->file('productImage')){
+            $imageUrl = $this->storeImage($request);
+            $product->productImage = $imageUrl;
+        }
+
         $product->productName = $request->productName;
         $product->productColor = $request->productColor;
         $product->productStorage = $request->productStorage;
-        $product->productImage = $imageUrl;
+        // $product->productImage = $imageUrl;
         $product->cate_id = $request->cate_id;
         // dd($product);
         $product->save();
@@ -127,19 +130,20 @@ class SmartPhonesController extends Controller
         if($request->keyword == null && $request->cate_id == null){
             $products = DB::table('products')->join('categories', 'products.cate_id', '=', 'categories.idCate')->orderBy('idProduct')->paginate(6);
             $cate = Category::get();
-            return view('product.read', compact('pageTitle', 'products', 'cate'));
-        }else if($request->keyword != null && $request->cate_id == null){
+        }
+        if($request->keyword != null && $request->cate_id == null){
             $cate = Category::get();
             $products = DB::table('products')->join('categories', 'products.cate_id', '=', 'categories.idCate')->where('productName', 'like', "%".$request->keyword."%")->paginate(6);
-            return view('product.read', compact('pageTitle', 'products', 'cate'));
-        }else if($request->keyword == null && $request->cate_id != null){
+        }
+        if($request->keyword == null && $request->cate_id != null){
             $cate = Category::get();
             $products = DB::table('products')->join('categories', 'products.cate_id', '=', 'categories.idCate')->where('cate_id', '=', $request->cate_id)->paginate(6);
-            return view('product.read', compact('pageTitle', 'products', 'cate'));
-        }else if($request->keyword != null && $request->cate_id != null){
+        }
+        if($request->keyword != null && $request->cate_id != null){
             $cate = Category::get();
             $products = DB::table('products')->join('categories', 'products.cate_id', '=', 'categories.idCate')->where('cate_id', '=', $request->cate_id)->where('productName', 'like', "%".$request->keyword."%")->paginate(6);
-            return view('product.read', compact('pageTitle', 'products', 'cate'));
         }
+        return view('product.read', compact('pageTitle', 'products', 'cate'));
     }
+
 }

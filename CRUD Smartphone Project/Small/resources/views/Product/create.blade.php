@@ -35,7 +35,9 @@
                 <p class="text-danger">{{ $message }}</p>
             @enderror
             <label for="">Image</label>
-            <input type="file" class="form-control" name="productImage" accept="image/*">
+            {{-- Chỉ cho chọn file ảnh --}}
+            {{-- <input type="file" class="form-control" name="productImage" accept="image/*"> --}}
+            <input type="file" class="form-control" name="productImage" >
             @error('productImage')
                 <p class="text-danger">{{ $message }}</p>
             @enderror
