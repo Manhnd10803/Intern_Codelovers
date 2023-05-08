@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Models\Category;
 use App\Models\Product;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 class SmartPhonesController extends Controller
 {
@@ -15,15 +16,7 @@ class SmartPhonesController extends Controller
     public function index()
     {
         $pageTitle = "Home";
-        // $products = Product::get();
-        // Tự động thêm thuộc tính cate_name vào trong đối tượng sản phẩm dựa vào cate_id
-        // foreach($products as $product){
-        //     $category = Category::find($product->cate_id);
-        //     $product->cate_name = $category->name;
-        //     // echo $product->cate_name;
-        // }
         $products = DB::table('products')->join('categories', 'products.cate_id', '=', 'categories.idCate')->orderBy('idProduct')->paginate(6);
-        // dd($products);
         $cate = Category::get();
         return view('product.read', compact('pageTitle', 'products', 'cate'));
     }
@@ -59,14 +52,18 @@ class SmartPhonesController extends Controller
         // ]
     );
         $imageUrl = $this->storeImage($request);
-        Product::create([
+        $post = Product::create([
             'productName' => $request['productName'],
             'productColor' => $request['productColor'],
             'productStorage' => $request['productStorage'],
             'productImage' => $imageUrl,
             'cate_id' => $request['cate_id'],
         ]);
-        return redirect('/');
+        if($post instanceof Model){
+            toastr()->success('Data has been added successfully!');
+            return redirect()->route('product.index');
+        }
+        return redirect()->back();
     }
 
     /**
@@ -109,11 +106,12 @@ class SmartPhonesController extends Controller
         $product->productName = $request->productName;
         $product->productColor = $request->productColor;
         $product->productStorage = $request->productStorage;
-        // $product->productImage = $imageUrl;
         $product->cate_id = $request->cate_id;
         // dd($product);
         $product->save();
-        return redirect('/');
+        // toastr()->success('Updated','Sửa thành công '. $request->productName);
+        toastr()->success('Data has been updated successfully!');
+        return redirect()->route('product.index');
     }
 
     /**
@@ -122,7 +120,8 @@ class SmartPhonesController extends Controller
     public function destroy(Product $product)
     {   
         $product->delete();
-        return redirect('/');
+        toastr()->success('Data has been deleted successfully!');
+        return redirect()->route('product.index');
     }
 
     public function search(Request $request){
