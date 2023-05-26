@@ -5,7 +5,7 @@
         <br>
         <form action="/search/product" method="get">
             {{-- @csrf --}}
-            @method('POST')
+            {{-- @method('GET') --}}
             <div class="formSearch">
                 <input type="text" class="form-control" name="keyword" placeholder="Product name...">
                 <select name="cate_id" id="" class="form-select">

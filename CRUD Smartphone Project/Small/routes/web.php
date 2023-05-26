@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SmartPhonesController;
+use App\Http\Controllers\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,5 +16,21 @@ use App\Http\Controllers\SmartPhonesController;
 */
 
 Route::get('/', [SmartPhonesController::class, 'index']);
-Route::resource('/product', SmartPhonesController::class);
+// Đăng nhập
+Route::get('/dang-nhap', [AuthController::class, 'getFormLogin'])->name('login');
+Route::post('/dang-nhap', [AuthController::class, 'submitFormLogin'])->name('sign-in');
+Route::get('/dang-ky', [AuthController::class, 'getFormRegister'])->name('sign-up');
+Route::post('/dang-ky', [AuthController::class, 'submitFormRegister'])->name('sign-up');
+Route::post('/dang-xuat', [AuthController::class, 'submitLogout'])->name('log-out');
+
+Route::get('/quen-mat-khau', [AuthController::class, 'getFormForgotPass'])->name('forgot-pass');
+Route::post('/quen-mat-khau', [AuthController::class, 'submitFormForgotPass'])->name('forgot-pass');
+Route::get('/mat-khau-moi/{id}/{token}', [AuthController::class, 'getFormNewPass'])->name('mat-khau-moi');
+Route::post('/mat-khau-moi/{id}/{token}', [AuthController::class, 'submitFormNewPass'])->name('mat-khau-moi');
+
+Route::get('/test-mail', [AuthController::class, 'testMail']);
+
+Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function(){
+    Route::resource('/product', SmartPhonesController::class);
+});
 Route::get('/search/product', [SmartPhonesController::class, 'search']);

@@ -36,11 +36,11 @@ return [
     'mailers' => [
         'smtp' => [
             'transport' => 'smtp',
-            'host' => env('MAIL_HOST', 'smtp.mailgun.org'),
-            'port' => env('MAIL_PORT', 587),
-            'encryption' => env('MAIL_ENCRYPTION', 'tls'),
-            'username' => env('MAIL_USERNAME'),
-            'password' => env('MAIL_PASSWORD'),
+            'host' => 'stmp.gmail.com',
+            'port' => 587,
+            'encryption' => 'tls',
+            'username' => 'manhnd10803@gmail.com',
+            'password' => 'amgzlvfycyzncbqq',
             'timeout' => null,
             'local_domain' => env('MAIL_EHLO_DOMAIN'),
         ],
@@ -98,8 +98,8 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
-        'name' => env('MAIL_FROM_NAME', 'Example'),
+        'address' => 'manhnd10803@gmail.com',
+        'name' => 'MiniProject',
     ],
 
     /*
@@ -120,5 +120,6 @@ return [
             resource_path('views/vendor/mail'),
         ],
     ],
+
 
 ];

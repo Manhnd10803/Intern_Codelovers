@@ -1,17 +1,38 @@
-.formSearch{
+.formSearch {
     display: flex;
     /* justify-content: space-around; */
     padding: 0 3%;
 }
-.formSearch input{
+
+.formSearch input {
     max-width: 50%;
     margin-right: 3%;
 }
-.formSearch select{
+
+.formSearch select {
     max-width: 20%;
     margin-right: 3%;
 }
-a{ 
+
+a {
     color: black;
     text-decoration: none;
+}
+/* CSS Login */
+.divider:after,
+.divider:before {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: #eee;
+}
+
+.h-custom {
+    height: calc(100% - 73px);
+}
+
+@media (max-width: 450px) {
+    .h-custom {
+        height: 100%;
+    }
 }
