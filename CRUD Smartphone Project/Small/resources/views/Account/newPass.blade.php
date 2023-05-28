@@ -8,12 +8,12 @@
                 class="img-fluid" alt="Sample image">
             </div>
             <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
-            <form action="{{ route('forgot-pass') }}" method="POST">
+            <form action="{{ route('post-mat-khau-moi') }}" method="POST">
                 @csrf
                 @method('POST')
                 <div class="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
                 {{-- <p class="lead fw-normal mb-0 me-3">Sign in with</p> --}}
-                <h3>FORGOT PASSWORD </h3>
+                <h3>NEW PASS</h3>
                 {{-- <button type="button" class="btn btn-primary btn-floating mx-1">
                     <i class="fab fa-facebook-f"></i>
                 </button>
@@ -31,20 +31,29 @@
                 {{-- <p class="text-center fw-bold mx-3 mb-0">Or</p> --}}
                 <p class="text-center fw-bold mx-3 mb-0">M</p>
                 </div>
-    
-                <!-- Email input -->
-                <div class="form-outline mb-4">
-                    <input type="text" name="email" id="form3Example3" class="form-control form-control-lg"
-                        placeholder="Enter a valid email" />
-                        @error('email')
-                            <label class="form-label text-danger" for="form3Example3">{{ $message }}</label>
-                        @enderror
+
+                <input type="hidden" name="id" value="{{ $id }}">
+                <!-- Password input -->
+                <div class="form-outline mb-3">
+                    <input type="password" name="password" id="form3Example4" class="form-control form-control-lg"
+                        placeholder="Enter new password" />
+                    @error('password')
+                        <label class="form-label text-danger" for="form3Example3">{{ $message }}</label>
+                    @enderror
                 </div>
-    
+
+                <!-- Password input -->
+                <div class="form-outline mb-3">
+                    <input type="password" name="confirm_password" id="form3Example4" class="form-control form-control-lg"
+                        placeholder="Enter confirm new password" />
+                    @error('confirm_password')
+                        <label class="form-label text-danger" for="form3Example3">{{ $message }}</label>
+                    @enderror
+                </div>
     
                 <div class="text-center text-lg-start mt-4 pt-2">
                 <button type="submit" class="btn btn-primary btn-lg"
-                    style="padding-left: 2.5rem; padding-right: 2.5rem;">Send</button>
+                    style="padding-left: 2.5rem; padding-right: 2.5rem;">Submit</button>
                 </div>
             </form>
             </div>

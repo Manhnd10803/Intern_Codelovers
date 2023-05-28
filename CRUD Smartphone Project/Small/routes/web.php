@@ -26,7 +26,7 @@ Route::post('/dang-xuat', [AuthController::class, 'submitLogout'])->name('log-ou
 Route::get('/quen-mat-khau', [AuthController::class, 'getFormForgotPass'])->name('forgot-pass');
 Route::post('/quen-mat-khau', [AuthController::class, 'submitFormForgotPass'])->name('forgot-pass');
 Route::get('/mat-khau-moi/{id}/{token}', [AuthController::class, 'getFormNewPass'])->name('mat-khau-moi');
-Route::post('/mat-khau-moi/{id}/{token}', [AuthController::class, 'submitFormNewPass'])->name('mat-khau-moi');
+Route::post('/dat-lai-mat-khau', [AuthController::class, 'submitFormNewPass'])->name('post-mat-khau-moi');
 
 Route::get('/test-mail', [AuthController::class, 'testMail']);
 

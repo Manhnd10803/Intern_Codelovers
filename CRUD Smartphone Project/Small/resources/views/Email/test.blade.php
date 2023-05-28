@@ -7,7 +7,7 @@
     }
 </style>
 <div class="test-email">
-    <h2>Hi {{ $name }}</h2>
+    <h2>Hi Mạnh</h2>
     <p>
         Đây là email test
     </p>
