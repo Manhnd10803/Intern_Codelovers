@@ -12,10 +12,12 @@ use Illuminate\Support\Str;
 use App\Mail\MailNotify;
 use Illuminate\Support\Facades\Mail;
 
-
 use App\Task;
 use App\Jobs\SendEmail;
 use App\Mail\ForgotPass;
+
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -24,24 +26,49 @@ class AuthController extends Controller
         return view('account.login', compact('pageTitle'));
     }
     public function submitFormLogin(Request $request){
-        $request->validate([
-            'name' => 'required',
-            'password' => 'required'
-        ],[
-            'name.required' => 'Bạn chưa nhập tên',
-            'password.required' => 'Bạn chưa nhập mật khẩu'
-        ]);
-        if(Auth::attempt([
-            'name' => $request->name,
-            'password' => $request->password
-        ])){
-            $user = User::where('name', $request->name)->first();
-            Auth::login($user);
-            toastr()->success('Đăng nhập thành công');
-            return redirect()->route('product.index');
-        }else{
-            toastr()->error('Đăng nhập thất bại');
+        // $request->validate([
+        //     'name' => 'required',
+        //     'password' => 'required'
+        // ],[
+        //     'name.required' => 'Bạn chưa nhập tên',
+        //     'password.required' => 'Bạn chưa nhập mật khẩu'
+        // ]);
+        // Khi lock-log-in = 3 (chứng tỏ đã khóa đăng nhập) và thời gian hiện tại lớn hơn thời gian khóa (chứng tỏ đã hết thời gian khóa)
+        if(session('lock-log-in') == 3 && Carbon::now() >= session('time-unlock-log-in')){
+            // Xóa 2 session (mở khóa đăng nhập)
+            session()->forget('lock-log-in');
+            session()->forget('time-unlock-log-in');
+        }
+        // Thực hiển kiểm tra xem giá trị lock-log-in = 3 sẽ khóa đăng nhập
+        if(session('lock-log-in') == 3){
+            toastr()->error('Bạn đã bị khóa đăng nhập', 'Vui lòng thử lại trong vài phút');
             return redirect()->back();
+        }else{
+            if(Auth::attempt([
+                'name' => $request->name,
+                'password' => $request->password
+            ])){
+                $user = User::where('name', $request->name)->first();
+                Auth::login($user);
+                toastr()->success('Đăng nhập thành công');
+                return redirect()->route('product.index');
+            }else{
+                // Khi đăng nhập không thành công
+                // Kiểm tra xem session lock-log-in đã tồn tại chưa, nếu rồi cộng 1 vào giá trị khi đăng nhập sai lần tiếp theo
+                if(session()->has('lock-log-in')){
+                    session()->put('lock-log-in', session('lock-log-in')+1);
+                    // Khi đăng nhập sai 3 lần, lúc này giá trị lock-log-in bằng 3
+                    if(session('lock-log-in') == 3){
+                        // Khởi tạo session time-unlock-log-in (thời gian mở khóa đăng nhập) sau 3 phút
+                        session()->put('time-unlock-log-in', Carbon::now()->addMinute(3));
+                    }
+                }else{
+                    // Khởi tạo session lock-log-in với giá trị 1
+                    session()->put('lock-log-in', '1');
+                }
+                toastr()->error('Đăng nhập thất bại');
+                return redirect()->back();
+            }
         }
     }
     public function getFormRegister(){
@@ -50,24 +77,18 @@ class AuthController extends Controller
     }
     public function submitFormRegister(Request $request){
         $request->validate([
-            'name' => 'required|unique:users',
-            'email' => 'required|unique:users',
-            'password' => 'required',
-            'confirm_password' => 'required|same:password'
+            'name' => 'unique:users',
+            'email' => 'unique:users',
         ],
         [
-            'name.required' => 'Bạn chưa nhập tên',
             'name.unique' => 'Tài khoản đã tồn tại',
-            'email.required' => 'Bạn chưa nhập Email',
             'email.unique' => 'Email đã được đăng ký',
-            'password.required' => 'Bạn chưa nhập mật khẩu',
-            'confirm_password.required' => 'Bạn chưa nhập lại mật khẩu',
-            'confirm_password.same' => 'Mật khẩu nhập lại không trùng'
         ]);
         $user = new User();
         $user->name = $request->name;
         $user->email = $request->email;
-        $user->password = bcrypt($request->password);
+        // $user->password = bcrypt($request->password);
+        $user->password = Hash::make($request->password);
         $user->role = 0;
         $user->save();
         if($user instanceof Model){
@@ -78,7 +99,7 @@ class AuthController extends Controller
     }
     public function submitLogout(){
         Auth::logout();
-        return redirect()->back();
+        return redirect()->route('login');
     }
     public function getFormForgotPass(){
         $pageTitle = 'Forgot Password';
@@ -86,9 +107,8 @@ class AuthController extends Controller
     }
     public function submitFormForgotPass(Request $request){
         $request->validate([
-            'email' => 'required|exists:users'
+            'email' => 'exists:users'
         ],[
-            'email.required' => 'Bạn chưa nhập email',
             'email.exists' => 'Email không tồn tại'
         ]);
         $email = $request->email;
@@ -116,17 +136,17 @@ class AuthController extends Controller
         return redirect('/');
     }
     public function submitFormNewPass(Request $request){
-        $request->validate([
-            'password' => 'required',
-            'confirm_password' => 'required|same:password'
-        ],
-        [
-            'password.required' => 'Bạn chưa nhập mật khẩu',
-            'confirm_password.required' => 'Bạn chưa nhập lại mật khẩu',
-            'confirm_password.same' => 'Mật khẩu nhập lại không trùng'
-        ]);
+        // $request->validate([
+        //     'password' => 'required',
+        //     'confirm_password' => 'required|same:password'
+        // ],
+        // [
+        //     'password.required' => 'Bạn chưa nhập mật khẩu',
+        //     'confirm_password.required' => 'Bạn chưa nhập lại mật khẩu',
+        //     'confirm_password.same' => 'Mật khẩu nhập lại không trùng'
+        // ]);
         User::where('id', $request->id)->update([
-            'password' => bcrypt($request->password)
+            'password' => Hash::make($request->password)
         ]);
         toastr()->success('Vui lòng đăng nhập', 'Thay đổi mật khẩu thành công');
         return redirect()->route('login');

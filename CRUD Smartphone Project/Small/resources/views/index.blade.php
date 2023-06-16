@@ -9,6 +9,8 @@
         integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
     {{-- CSS --}}
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    {{-- JS --}}
+    @yield('javascript')
     <title>{{ $pageTitle }}</title>
 </head>
 <body>
@@ -21,24 +23,27 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNavDarkDropdown">
                 <ul class="navbar-nav">
-                <li class="nav-item dropdown">
-                    @if (Auth::check())
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Hello, {{ Auth::user()->name }}
-                        </a>
-                    @endif
-                    <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
-                    <li>
-                        <form action="{{ route('log-out') }}" method="POST">
-                            @csrf
-                            @method('POST')
-                            <button type="submit" class="btn btn-outline-primary">Đăng xuất</button>
-                        </form>
+                    <li class="nav-item dropdown">
+                        @if (Auth::check())
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Hello, {{ Auth::user()->name }}
+                            </a>
+                        @endif
+                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
+                            <li>
+                                <form action="{{ route('log-out') }}" method="POST">
+                                    @csrf
+                                    @method('POST')
+                                    <button type="submit" class="btn btn-outline-primary">Đăng xuất</button>
+                                </form>
+                            </li>
+                        </ul>
                     </li>
-                    {{-- <li><a class="dropdown-item" href="#">Another action</a></li>
-                    <li><a class="dropdown-item" href="#">Something else here</a></li> --}}
-                    </ul>
-                </li>
+                    <li>
+                        @if (!Auth::check())
+                            <a href="{{ route('login') }}" class="btn btn-outline-primary">Đăng nhập</a>
+                        @endif
+                    </li>
                 </ul>
             </div>
             </div>

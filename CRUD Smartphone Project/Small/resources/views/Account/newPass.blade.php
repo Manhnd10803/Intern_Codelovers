@@ -1,4 +1,31 @@
 @extends('index')
+@section('javascript')
+    <script>
+        function validate(){
+            let password = document.querySelector('#password').value;
+            let confirm_password = document.querySelector('#confirm_password').value;
+            let error_password = document.querySelector('.error_password');
+            let error_confirm_password = document.querySelector('.error_confirm_password');
+            let check = true;
+            if(password == ''){
+                error_password.innerHTML = 'Bạn cần nhập'
+                check = false
+            }else{
+                error_password.innerHTML = ''
+            }
+            if(confirm_password == ''){
+                error_confirm_password.innerHTML = 'Bạn cần nhập'
+                check = false
+            }else if(confirm_password !== password){
+                error_confirm_password.innerHTML = 'Mật khẩu nhập lại không khớp'
+                check = false
+            }else{
+                error_confirm_password.innerHTML = ''
+            }
+            return check;
+        }
+    </script>
+@endsection
 @section('content')
 <section class="vh-100">
         <div class="container-fluid h-custom">
@@ -35,25 +62,21 @@
                 <input type="hidden" name="id" value="{{ $id }}">
                 <!-- Password input -->
                 <div class="form-outline mb-3">
-                    <input type="password" name="password" id="form3Example4" class="form-control form-control-lg"
+                    <input type="password" name="password" id="password" class="form-control form-control-lg"
                         placeholder="Enter new password" />
-                    @error('password')
-                        <label class="form-label text-danger" for="form3Example3">{{ $message }}</label>
-                    @enderror
+                    <label class="form-label text-danger error_password" for="password"></label>
                 </div>
 
                 <!-- Password input -->
                 <div class="form-outline mb-3">
-                    <input type="password" name="confirm_password" id="form3Example4" class="form-control form-control-lg"
+                    <input type="password" name="confirm_password" id="confirm_password" class="form-control form-control-lg"
                         placeholder="Enter confirm new password" />
-                    @error('confirm_password')
-                        <label class="form-label text-danger" for="form3Example3">{{ $message }}</label>
-                    @enderror
+                    <label class="form-label text-danger error_confirm_password" for="confirm_password"></label>
                 </div>
     
                 <div class="text-center text-lg-start mt-4 pt-2">
                 <button type="submit" class="btn btn-primary btn-lg"
-                    style="padding-left: 2.5rem; padding-right: 2.5rem;">Submit</button>
+                    style="padding-left: 2.5rem; padding-right: 2.5rem;" onclick="return validate()">Submit</button>
                 </div>
             </form>
             </div>
